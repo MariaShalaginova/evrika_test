@@ -1,4 +1,5 @@
-import css from './Button.module.scss'; // Подключение файла стилей (замените на ваш путь)
+import css from './Button.module.scss';
+import PropTypes from 'prop-types' // Подключение файла стилей (замените на ваш путь)
 
 const Button = ({  onClick, disabled, children  }) => {
   return (
@@ -11,5 +12,11 @@ const Button = ({  onClick, disabled, children  }) => {
     </button>
   );
 }
+
+Button.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
+    children: PropTypes.node.isRequired
+};
 
 export default Button;

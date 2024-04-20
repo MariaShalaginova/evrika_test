@@ -111,30 +111,30 @@ export const houses = [
           }
         ]
       },
-      {
-        id: 5,
-        address: "Дом 5",
-        entrances: [
-          {
-            id: 1,
-            number: 1,
-            name: "Подъезд 1",
-            flats: [
-              { number: 1 },
-              { number: 2 }
-            ]
-          },
-          {
-            id: 2,
-            number: 2,
-            name: "Подъезд 2",
-            flats: [
-              { number: 1 },
-              { number: 2 },
-              { number: 3 }
-            ]
-          }
-        ]
-      },
+    //   {
+    //     id: 5,
+    //     address: "Дом 5",
+    //     entrances: [
+    //       {
+    //         id: 1,
+    //         number: 1,
+    //         name: "Подъезд 1",
+    //         flats: [
+    //           { number: 1 },
+    //           { number: 2 }
+    //         ]
+    //       },
+    //       {
+    //         id: 2,
+    //         number: 2,
+    //         name: "Подъезд 2",
+    //         flats: [
+    //           { number: 1 },
+    //           { number: 2 },
+    //           { number: 3 }
+    //         ]
+    //       }
+    //     ]
+    //   },
    
   ];

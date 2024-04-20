@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 function House({ house }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [entrances, setEntrances] = useState([]);
+    const [selectedEntrances, setSelectedEntrances] = useState([]);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -17,15 +17,22 @@ function House({ house }) {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-
+   
+    const handleAddEntrance = (entranceId, selectedFlats) => {
+        const entrance = house.entrances.find((ent) => ent.id === entranceId);
+        const updatedEntrance = { ...entrance, flats: selectedFlats };
+        setSelectedEntrances([...selectedEntrances, updatedEntrance]);
+        closeModal();
+    };
     const handleAddButtonClick = () => {
         openModal();
     };
-   const handleAddEntrance = (entrance) => {
-        setEntrances([...entrances, entrance]);
-        closeModal();
-        onAddEntrance(entrances); // Обновление списка домов после добавления подъезда
-    };
+    console.log(selectedEntrances)
+//    const handleAddEntrance = (entrance) => {
+//         setEntrances([...entrances, entrance]);
+//         closeModal();
+//         //onAddEntrance(entrances); // Обновление списка домов после добавления подъезда
+//     };
     return (
         <>
             <div className={css.item}>
@@ -54,22 +61,15 @@ function House({ house }) {
                         </div>
                         {/* <div className={css.row}> */}
 
-
-                        {entrances.map((entrance, index) => (
-                            <div key={index} className={css.row}>
+                        {selectedEntrances.map((entrance) => (
+                            <div key={entrance.id} className={css.row}>
                                 <div className={css.cell}>
-                                    {entrance.number}
+                                 Подъезд {entrance.number}
                                 </div>
                                 <div className={css.cell}>
-
-                                {entrance.flats.map((flat, index) => (
-                                        <span key={index}>{flat.number}{index !== entrance.flats.length - 1 ? ', ' : ''}</span>
+                                    {entrance.flats && entrance.flats.map((flat, index) => (
+                                        <span key={flat}>{flat}{index !== entrance.flats.length - 1 ? ', ' : ''}</span>
                                     ))}
-                                    {/* <ul>
-                                        {entrance.flats.map((flat, index) => (
-                                            <li key={index}>{flat.number}</li>
-                                        ))}
-                                    </ul> */}
                                 </div>
                             </div>
                         ))}
@@ -78,30 +78,31 @@ function House({ house }) {
                  
                 </div>
             </div>
-            <AddEntranceModal isOpen={isModalOpen} onClose={closeModal} onAddEntrance={handleAddEntrance} house={ house }>
+            <AddEntranceModal
+                isOpen={isModalOpen}
+                onClose={closeModal} 
+                onAddEntrance={handleAddEntrance}
+                house={ house }>
                     
             </AddEntranceModal>
         </>
     );
 }
 
-// House.propTypes = {
-//     house: PropTypes.shape({
-//         address: PropTypes.string.isRequired,
-//         entrances: PropTypes.arrayOf(PropTypes.shape({
-//             number: PropTypes.number.isRequired,
-//             flats: PropTypes.arrayOf(PropTypes.shape({
-//                 number: PropTypes.number.isRequired
-//             })).isRequired
-//         })).isRequired
-//     }).isRequired
-// };
-
 House.propTypes = {
     house: PropTypes.shape({
-        address: PropTypes.string.isRequired
+        address: PropTypes.string.isRequired,
+        entrances: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.number.isRequired,
+                name: PropTypes.string.isRequired,
+                flats: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        number: PropTypes.number.isRequired
+                    })
+                ).isRequired
+            })
+        ).isRequired
     }),
-    onAddEntrance: PropTypes.func.isRequired
 };
-
 export default House;

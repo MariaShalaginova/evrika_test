@@ -6,7 +6,7 @@ import AddFlatModal from './AddFlat';
 // import { houses } from '../../mock';
 import PropTypes from 'prop-types';
 const AddEntranceModal = (
-    { isOpen, onClose, onAddEntrance, house }
+    { isOpen, onClose, house, onAddEntrance }
 ) => {
     
 //   const [entranceNumber, setEntranceNumber] = useState('');
@@ -24,6 +24,10 @@ const handleEntranceClick = (entrance) => {
 
 
 const closeAddFlatModal = () => {
+  setIsModalAddFlatOpen(false);
+};
+const handleAddFlats = (entranceId, selectedFlats) => {
+  onAddEntrance(entranceId, selectedFlats);
   setIsModalAddFlatOpen(false);
 };
 
@@ -63,8 +67,13 @@ if (!isOpen) return null;
           </div>
       </div>
 
-      <AddFlatModal isOpen={isModalAddFlatOpen} onClose={closeAddFlatModal} house={ house } selectedEntrance={selectedEntrance}>
-
+      <AddFlatModal
+        isOpen={isModalAddFlatOpen} 
+        onClose={closeAddFlatModal}
+        onAddFlats={handleAddFlats}
+        house={ house }
+        selectedEntrance={selectedEntrance}
+        >
       </AddFlatModal>
     </>
   );
