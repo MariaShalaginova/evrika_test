@@ -1,10 +1,12 @@
 import css from './Modals.module.scss'; // Подключение файла стилей (замените на ваш путь)
+import '../../styles/_base.scss';
 import close from '../../assets/close-icon.svg';
-import { useState } from 'react';
+import  { useState } from 'react';
 import AddFlatModal from './AddFlat';
-
+// import { houses } from '../../mock';
+import PropTypes from 'prop-types';
 const AddEntranceModal = (
-    { isOpen, onClose, children }
+    { isOpen, onClose, onAddEntrance, house }
 ) => {
     
 //   const [entranceNumber, setEntranceNumber] = useState('');
@@ -19,17 +21,13 @@ const handleEntranceClick = (entrance) => {
   // Например: setOpenApartmentModal(true);
   setIsModalAddFlatOpen(true);
 };
-if (!isOpen) return null;
-//   const handleAddEntrance = () => {
-//     // Проверки на валидность введенных данных
-//     if (entranceNumber.trim() === '') {
-//       alert('Введите номер подъезда');
-//       return;
-//     }
+
+
 const closeAddFlatModal = () => {
   setIsModalAddFlatOpen(false);
 };
 
+if (!isOpen) return null;
 //     // Вызываем функцию для добавления подъезда и закрываем модальное окно
 //     onAddEntrance(entranceNumber);
 //     onClose();
@@ -50,28 +48,40 @@ const closeAddFlatModal = () => {
 
           <div className={css.modal__content}>
             <ul className={css.entranceList}>
-              <li
-                className={selectedEntrance === 1 ? css.selected : null}
-                onClick={() => handleEntranceClick(1)}
-              >
-                Подъезд 1
-              </li>
-              <li
-                className={selectedEntrance === 2 ? css.selected : null}
-                onClick={() => handleEntranceClick(2)}
-              >
-                Подъезд 2
-              </li>
+
+              {house.entrances.map((entrance) => (
+                              <li
+                                  key={entrance.id}
+                                  className={selectedEntrance === entrance.id? css.selected : null}
+                                  onClick={() => handleEntranceClick(entrance.id)}
+                              >
+                                  {entrance.name}
+                              </li>
+              ))}
             </ul>
           
           </div>
       </div>
 
-      <AddFlatModal isOpen={isModalAddFlatOpen} onClose={closeAddFlatModal}>
+      <AddFlatModal isOpen={isModalAddFlatOpen} onClose={closeAddFlatModal} house={ house } selectedEntrance={selectedEntrance}>
 
       </AddFlatModal>
     </>
   );
+};
+
+AddEntranceModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired, // Флаг открытия модального окна
+  onClose: PropTypes.func.isRequired, // Функция закрытия модального окна
+  onAddEntrance: PropTypes.func.isRequired, // Функция добавления подъезда
+  house: PropTypes.shape({
+    entrances: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired
+      })
+    ).isRequired
+  }).isRequired // Дом, содержащий информацию о подъездах
 };
 
 export default AddEntranceModal;

@@ -11,10 +11,6 @@ function Main() {
           <House key={house.id} house={house} />
         ))}
         </div>
-      {/* Ghbdtn
-      <div className="main__container">
-        HOHOHO
-      </div> */}
      </div>
   
   

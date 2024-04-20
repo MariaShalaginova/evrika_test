@@ -6,6 +6,7 @@ export const houses = [
         {
           id: 1,
           number: 1,
+          name: "Подъезд 1",
           flats: [
             { number: 1 },
             { number: 2 },
@@ -15,6 +16,7 @@ export const houses = [
         {
           id: 2,
           number: 2,
+          name: "Подъезд 2",
           flats: [
             { number: 1 },
             { number: 2 },
@@ -30,6 +32,7 @@ export const houses = [
       entrances: [
         {
           id: 1,
+          name: "Подъезд 1",
           number: 1,
           flats: [
             { number: 1 },
@@ -39,6 +42,7 @@ export const houses = [
         {
           id: 2,
           number: 2,
+          name: "Подъезд 2",
           flats: [
             { number: 1 },
             { number: 2 },
@@ -54,6 +58,7 @@ export const houses = [
           {
             id: 1,
             number: 1,
+            name: "Подъезд 1",
             flats: [
               { number: 1 },
               { number: 2 }
@@ -62,6 +67,7 @@ export const houses = [
           {
             id: 2,
             number: 2,
+            name: "Подъезд 2",
             flats: [
               { number: 1 },
               { number: 2 },
@@ -71,6 +77,7 @@ export const houses = [
           {
             id: 3,
             number: 3,
+            name: "Подъезд 3",
             flats: [
               { number: 1 },
               { number: 2 },
@@ -86,6 +93,7 @@ export const houses = [
           {
             id: 1,
             number: 1,
+            name: "Подъезд 1",
             flats: [
               { number: 1 },
               { number: 2 }
@@ -94,6 +102,7 @@ export const houses = [
           {
             id: 2,
             number: 2,
+            name: "Подъезд 2",
             flats: [
               { number: 1 },
               { number: 2 },
@@ -109,6 +118,7 @@ export const houses = [
           {
             id: 1,
             number: 1,
+            name: "Подъезд 1",
             flats: [
               { number: 1 },
               { number: 2 }
@@ -117,6 +127,7 @@ export const houses = [
           {
             id: 2,
             number: 2,
+            name: "Подъезд 2",
             flats: [
               { number: 1 },
               { number: 2 },
