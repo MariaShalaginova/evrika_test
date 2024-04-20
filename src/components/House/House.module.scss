@@ -36,6 +36,8 @@
     .block {
         display: flex;
         flex-direction: column;
+        overflow-y: auto;
+        max-height: 220px;
     }
     
     .column {
@@ -53,15 +55,20 @@
         // padding: 10px auto;
         width: 100%;
     }
+
+    .row:first-child {
+       height: 60px; 
+       padding: auto
+    }
     
     .cell {
         flex: 1;
-        padding: 8px;
         border-bottom: 1px solid black;
         font-size: 14px;
         border-right: 1px solid black;
+        padding: 10px 0;   
     }
-    
+
     .cell:last-child {
         border-right: none;
     }

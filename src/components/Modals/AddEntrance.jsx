@@ -12,16 +12,11 @@ const AddEntranceModal = (
 //   const [entranceNumber, setEntranceNumber] = useState('');
 const [selectedEntrance, setSelectedEntrance] = useState(null);
 const [isModalAddFlatOpen, setIsModalAddFlatOpen] = useState(false);//открытие модального окна с квартирами
-//   const handleEntranceNumberChange = (e) => {
-//     setEntranceNumber(e.target.value);
-//   };
+
 const handleEntranceClick = (entrance) => {
   setSelectedEntrance(entrance);
-  // Открыть другое модальное окно или выполнить другие действия при нажатии на подъезд
-  // Например: setOpenApartmentModal(true);
   setIsModalAddFlatOpen(true);
 };
-
 
 const closeAddFlatModal = () => {
   setIsModalAddFlatOpen(false);
@@ -32,10 +27,6 @@ const handleAddFlats = (entranceId, selectedFlats) => {
 };
 
 if (!isOpen) return null;
-//     // Вызываем функцию для добавления подъезда и закрываем модальное окно
-//     onAddEntrance(entranceNumber);
-//     onClose();
-//   };
 
   return (
     <>

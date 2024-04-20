@@ -16,6 +16,7 @@ const AddFlatModal = (
         setSelectedFlats([]);
         setSelectedFlatIndex(0); // Обнуляем выбранные квартиры при изменении выбранного подъезда
     }, [selectedEntrance]);
+
     const handleFlatClick = (flat) => {
         if (selectedFlats.includes(flat)) {
             // Если квартира уже выбрана, убираем ее из выбранных

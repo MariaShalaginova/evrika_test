@@ -19,15 +19,36 @@ function House({ house }) {
     };
    
     const handleAddEntrance = (entranceId, selectedFlats) => {
-        const entrance = house.entrances.find((ent) => ent.id === entranceId);
-        const updatedEntrance = { ...entrance, flats: selectedFlats };
-        setSelectedEntrances([...selectedEntrances, updatedEntrance]);
+        
+        const existingEntranceIndex = selectedEntrances.findIndex((ent) => ent.id === entranceId);
+     
+        if (existingEntranceIndex !== -1) {
+            // Если подъезд уже выбран, обновляем список его квартир
+            const updatedEntrances = [...selectedEntrances];
+            const entranceToUpdate = updatedEntrances[existingEntranceIndex];
+            // Фильтруем квартиры, чтобы исключить уже выбранные
+            const filteredFlats = selectedFlats.filter((flat) => !entranceToUpdate.flats.includes(flat));
+            const updatedFlats = [...entranceToUpdate.flats, ...filteredFlats];
+            const updatedEntrance = { ...entranceToUpdate, flats: updatedFlats };
+            updatedEntrances[existingEntranceIndex] = updatedEntrance;
+    
+            setSelectedEntrances(updatedEntrances);
+        } else {
+            // Если подъезд еще не выбран, добавляем его в список
+            const entrance = house.entrances.find((ent) => ent.id === entranceId);
+            const updatedEntrance = { ...entrance, flats: selectedFlats };
+            setSelectedEntrances([...selectedEntrances, updatedEntrance]);
+        }
+    
         closeModal();
     };
     const handleAddButtonClick = () => {
         openModal();
     };
     console.log(selectedEntrances)
+    const handleDeleteEntrance = () => {
+        setSelectedEntrances([]);
+    };
 //    const handleAddEntrance = (entrance) => {
 //         setEntrances([...entrances, entrance]);
 //         closeModal();
@@ -41,7 +62,7 @@ function House({ house }) {
                     <p>{house.address}</p>
 
                     <div className={css.item__buttons}>
-                        <Button className={css.item__button}>
+                        <Button  onClick={() => handleDeleteEntrance()} className={css.item__button}>
                             <img src={trash} alt="trash" />
                         </Button>
                         <Button onClick={handleAddButtonClick} className={css.button}>
@@ -67,8 +88,10 @@ function House({ house }) {
                                  Подъезд {entrance.number}
                                 </div>
                                 <div className={css.cell}>
-                                    {entrance.flats && entrance.flats.map((flat, index) => (
-                                        <span key={flat}>{flat}{index !== entrance.flats.length - 1 ? ', ' : ''}</span>
+                                    {entrance.flats && entrance.flats
+                                        .sort((a, b) => a - b) // Сортируем квартиры по возрастанию
+                                        .map((flat, index) => (
+                                            <span key={flat}>{flat}{index !== entrance.flats.length - 1 ? ', ' : ''}</span>
                                     ))}
                                 </div>
                             </div>
