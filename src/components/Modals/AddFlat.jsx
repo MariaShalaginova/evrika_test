@@ -3,13 +3,17 @@ import '../../styles/_base.scss';
 import close from '../../assets/close-icon.svg';
 import Button from '../Button/Button';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const AddFlatModal = (
     { isOpen, onClose, house, selectedEntrance }
 ) => {
 
     const [selectedFlats, setSelectedFlats] = useState([]);
+
+    useEffect(() => {
+        setSelectedFlats([]); // Обнуляем выбранные квартиры при изменении выбранного подъезда
+    }, [selectedEntrance]);
     const handleFlatClick = (flat) => {
         if (selectedFlats.includes(flat)) {
             // Если квартира уже выбрана, убираем ее из выбранных
