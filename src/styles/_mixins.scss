@@ -1,0 +1,43 @@
+@mixin button-styles {
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 6px;
+    // padding: 8px 48px;
+    background-color: rgba(69, 135, 237, 1);
+    color: white;
+    height: fit-content;
+    padding: 5px;
+    &:hover {
+        background-color: rgba(53, 115, 210, 1); /* Изменение цвета при наведении */
+      }
+    
+      &:active {
+        background-color:rgba(34, 92, 181, 1); /* Изменение цвета при нажатии (pressed) */
+      }
+    
+      &:disabled {
+        opacity: 0.5; /* Состояние неактивной кнопки */
+        cursor: not-allowed; /* Изменение курсора для неактивной кнопки */
+        background-color: rgba(171, 199, 242, 1);
+      }
+  }
+
+  
+// Миксин для кнопки без фона
+@mixin button_no_background {
+  background-color: transparent; // Убираем фон
+  padding: 0px;
+  &:hover {
+    background-color: transparent; /* Изменение цвета при наведении */
+  }
+
+  &:active {
+    background-color:transparent; /* Изменение цвета при нажатии (pressed) */
+  }
+
+}
+
+@mixin list-styles-main {
+  
+}

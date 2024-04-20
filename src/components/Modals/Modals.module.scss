@@ -1,0 +1,57 @@
+@import '../../styles/_colors.scss';
+@import '../../styles/_mixins.scss';
+@import '../../styles/_base.scss';
+
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    display: flex;
+    flex-direction: column;
+    height: 238px;
+    padding: 0px 0px 8px 0px;
+    gap: 8px;
+    border-radius: 12px 0px 0px 0px;
+    background: $color-white;
+    width: 15%;
+    &__entrance {
+         left: 65%;
+    }
+
+    &__name {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(53, 61, 75, 1);
+        padding: 8px 2px 8px 12px;
+        border-radius: 12px 12px 0px 0px; 
+        color:$color-white;
+    }
+
+    &__content {
+        display: flex;
+        flex-direction: column; /* Подъезды идут в столбик */
+        overflow-y: auto;
+        max-height: 220px;
+        padding: 5px;
+    }
+
+    &__flat {
+        left: 78%;
+    }
+
+    p {
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.02em;
+
+    }
+
+    .button_no_background{
+        @include button-styles;
+        @include button-no-background; 
+    }
+
+
+   
+}

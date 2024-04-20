@@ -1,0 +1,70 @@
+@import '../../styles/_colors.scss';
+@import '../../styles/_mixins.scss';
+
+.item {
+    width: calc(50% - 20px); /* Ширина элемента - половина ширины блока минус отступы */
+    margin: 10px; /* Отступы между элементами */
+    height: fit-content;
+     &__name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+    }
+    &__buttons {
+        // width: 20%;
+        // width: 25%;
+        // display: flex;
+        // justify-content: space-between;
+        display: flex;
+        gap: 10px; 
+    }
+
+    &__list {
+        width: 100%;
+        min-height: 220px;
+        height: fit-content;
+        gap: 0px;
+        border-radius: 12px 12px 0px 0px;
+        opacity: 0px;
+        background: $color-white;
+    }
+    // &__list {
+    //     margin-top: 20px; /* Добавляем отступ сверху для списка */
+    //   }
+    
+    .block {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .column {
+        // flex: 1;
+        // padding: 8px;
+        border-right: 1px solid black;
+    }
+    
+    .column:last-child {
+        border-right: none;
+    }
+    
+    .row {
+        display: flex;
+        // padding: 10px auto;
+        width: 100%;
+    }
+    
+    .cell {
+        flex: 1;
+        padding: 15px;
+        border-bottom: 1px solid black;
+        font-size: 14px;
+        border-right: 1px solid black;
+    }
+    
+    .cell:last-child {
+        border-right: none;
+    }
+  
+}
+
