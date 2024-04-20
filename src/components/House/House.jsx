@@ -47,18 +47,38 @@ function House({ house }) {
                                 <p>Номер квартиры</p>
                             </div>
                         </div>
-                        <div className={css.row}>
-                            <div className={css.cell}>  
+                        {/* <div className={css.row}> */}
+
+
+                        {house.entrances.map((entrance, index) => (
+                            <div key={index} className={css.row}>
+                                <div className={css.cell}>
+                                    {entrance.number}
+                                </div>
+                                <div className={css.cell}>
+                                    <ul>
+                                        {entrance.flats.map((flat, index) => (
+                                            <li key={index}>{flat.number}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        ))}
+
+
+
+
+                            {/* <div className={css.cell}>  
                                 <ul>
                                     {house.entrances.map((entrance, index) => (
                                         <li key={index}>{entrance.number}</li>
                                     ))}
                                 </ul>
-                            </div>
+                            </div> */}
                             {/* <div className={css.cell}>
                                 <p>Номер квартиры</p>
                             </div> */}
-                            <div className={css.cell}>    
+                            {/* <div className={css.cell}>    
                                 <ul>
                                     {house.entrances.map((entrance) => (
                                         entrance.flats.map((flat, index) => (
@@ -66,9 +86,9 @@ function House({ house }) {
                                         ))
                                     ))}
                                 </ul>
-                            </div>
+                            </div> */}
                         </div>    
-                    </div>
+                    {/* </div> */}
                 </div>
             </div>
             <AddEntranceModal isOpen={isModalOpen} onClose={closeModal}>
