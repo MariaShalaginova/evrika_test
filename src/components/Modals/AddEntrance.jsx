@@ -16,52 +16,52 @@ const AddEntranceModal = forwardRef ((
 
   const [selectedEntranceIndex, setSelectedEntranceIndex] = useState(0);
 
-useEffect(() => {
-  const handleKeyDown = (event) => {
-    if (event.key === 'ArrowDown') {
-      event.preventDefault();
-      setSelectedEntranceIndex((prevIndex) => (prevIndex + 1) % house.entrances.length);
-      setSelectedEntrance(selectedEntranceIndex+1);
-      console.log(selectedEntranceIndex);
-      console.log(selectedEntrance)
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        setSelectedEntranceIndex((prevIndex) => (prevIndex + 1) % house.entrances.length);
+        setSelectedEntrance(selectedEntranceIndex+1);
+        console.log(selectedEntranceIndex);
+        console.log(selectedEntrance)
 
-    } else if (event.key === 'ArrowUp') {
-      event.preventDefault();
-      setSelectedEntranceIndex((prevIndex) => (prevIndex - 1 + house.entrances.length) % house.entrances.length);
-      setSelectedEntrance(selectedEntranceIndex+1);
-       console.log(selectedEntranceIndex)
-      console.log(selectedEntrance)
-    } else if (event.key === 'Enter') {
-      if (!selectedEntrance) {
-        setIsModalAddFlatOpen(false);
-      } else {
-        handleEntranceClick(selectedEntrance, selectedEntranceIndex);
-      } 
-    } else if (event.key === 'Escape') {
-      closeAddFlatModal();
-      setSelectedEntrance(null); // Сброс выбранного подъезда при нажатии Esc
-      setSelectedEntranceIndex(0); // Сброс индекса при нажатии Esc
-    }
-  };
-
-  window.addEventListener('keydown', handleKeyDown);
-
-  return () => {
-    window.removeEventListener('keydown', handleKeyDown);
-  };
-}, [house.entrances.length, selectedEntrance]);
-
-// Функция для установки фокуса на модальное окно подъезда
-useImperativeHandle(ref, () => ({
-  focus: () => {
-      // Установка фокуса на модальное окно подъезда
-      // Например, можно установить фокус на кнопку закрытия окна
-      const closeButton = document.querySelector('.modal__name button');
-      if (closeButton) {
-          closeButton.focus();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        setSelectedEntranceIndex((prevIndex) => (prevIndex - 1 + house.entrances.length) % house.entrances.length);
+        setSelectedEntrance(selectedEntranceIndex+1);
+        console.log(selectedEntranceIndex)
+        console.log(selectedEntrance)
+      } else if (event.key === 'Enter') {
+        if (!selectedEntrance) {
+          setIsModalAddFlatOpen(false);
+        } else {
+          handleEntranceClick(selectedEntrance, selectedEntranceIndex);
+        } 
+      } else if (event.key === 'Escape') {
+        closeAddFlatModal();
+        setSelectedEntrance(null); // Сброс выбранного подъезда при нажатии Esc
+        setSelectedEntranceIndex(0); // Сброс индекса при нажатии Esc
       }
-  }
-}));
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [house.entrances.length, selectedEntrance]);
+
+  // Функция для установки фокуса на модальное окно подъезда
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+        // Установка фокуса на модальное окно подъезда
+        // Например, можно установить фокус на кнопку закрытия окна
+        const closeButton = document.querySelector('.modal__name button');
+        if (closeButton) {
+            closeButton.focus();
+        }
+    }
+  }));
 
   const handleEntranceClick = (entranceId, index) => {
     setSelectedEntrance(entranceId);
@@ -71,7 +71,7 @@ useImperativeHandle(ref, () => ({
     console.log(selectedEntrance);
     console.log(selectedEntranceIndex);
   };
- // console.log(selectedEntrance)
+  // console.log(selectedEntrance)
   const closeAddFlatModal = () => {
     setIsModalAddFlatOpen(false);
     // selectedEntrance(null);
