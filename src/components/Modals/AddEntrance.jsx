@@ -4,29 +4,30 @@ import close from '../../assets/close-icon.svg';
 import  { useState } from 'react';
 import AddFlatModal from './AddFlat';
 // import { houses } from '../../mock';
-import PropTypes from 'prop-types';
+import {addEntranceModalPropTypes} from '../../propTypes';
+
 const AddEntranceModal = (
     { isOpen, onClose, house, onAddEntrance }
 ) => {
     
-//   const [entranceNumber, setEntranceNumber] = useState('');
-const [selectedEntrance, setSelectedEntrance] = useState(null);
-const [isModalAddFlatOpen, setIsModalAddFlatOpen] = useState(false);//открытие модального окна с квартирами
+  //   const [entranceNumber, setEntranceNumber] = useState('');
+  const [selectedEntrance, setSelectedEntrance] = useState(null);
+  const [isModalAddFlatOpen, setIsModalAddFlatOpen] = useState(false);//открытие модального окна с квартирами
 
-const handleEntranceClick = (entrance) => {
-  setSelectedEntrance(entrance);
-  setIsModalAddFlatOpen(true);
-};
+  const handleEntranceClick = (entrance) => {
+    setSelectedEntrance(entrance);
+    setIsModalAddFlatOpen(true);
+  };
 
-const closeAddFlatModal = () => {
-  setIsModalAddFlatOpen(false);
-};
-const handleAddFlats = (entranceId, selectedFlats) => {
-  onAddEntrance(entranceId, selectedFlats);
-  setIsModalAddFlatOpen(false);
-};
+  const closeAddFlatModal = () => {
+    setIsModalAddFlatOpen(false);
+  };
+  const handleAddFlats = (entranceId, selectedFlats) => {
+    onAddEntrance(entranceId, selectedFlats);
+    setIsModalAddFlatOpen(false);
+  };
 
-if (!isOpen) return null;
+  if (!isOpen) return null;
 
   return (
     <>
@@ -70,18 +71,6 @@ if (!isOpen) return null;
   );
 };
 
-AddEntranceModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired, // Флаг открытия модального окна
-  onClose: PropTypes.func.isRequired, // Функция закрытия модального окна
-  onAddEntrance: PropTypes.func.isRequired, // Функция добавления подъезда
-  house: PropTypes.shape({
-    entrances: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired
-      })
-    ).isRequired
-  }).isRequired // Дом, содержащий информацию о подъездах
-};
+AddEntranceModal.propTypes = addEntranceModalPropTypes;
 
 export default AddEntranceModal;

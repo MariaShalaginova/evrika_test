@@ -2,13 +2,31 @@ import Button from '../Button/Button';
 import css from './House.module.scss';
 import trash from '../../assets/trash-icon.svg';
 import add from '../../assets/add-icon.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddEntranceModal from '../Modals/AddEntrance';
-import PropTypes from 'prop-types';
+import { housePropTypes } from '../../propTypes';
 
 function House({ house }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEntrances, setSelectedEntrances] = useState([]);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Enter' && !isModalOpen) {
+                openModal();
+            } else if (e.key === 'Escape' && isModalOpen) {
+                closeModal();
+            } else if (e.key === 'Delete') {
+                handleDeleteEntrance();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isModalOpen]);
 
     const openModal = () => {
         setIsModalOpen(true);
@@ -34,7 +52,6 @@ function House({ house }) {
     
             setSelectedEntrances(updatedEntrances);
         } else {
-            // Если подъезд еще не выбран, добавляем его в список
             const entrance = house.entrances.find((ent) => ent.id === entranceId);
             const updatedEntrance = { ...entrance, flats: selectedFlats };
             setSelectedEntrances([...selectedEntrances, updatedEntrance]);
@@ -49,11 +66,7 @@ function House({ house }) {
     const handleDeleteEntrance = () => {
         setSelectedEntrances([]);
     };
-//    const handleAddEntrance = (entrance) => {
-//         setEntrances([...entrances, entrance]);
-//         closeModal();
-//         //onAddEntrance(entrances); // Обновление списка домов после добавления подъезда
-//     };
+
     return (
         <>
             <div className={css.item}>
@@ -113,19 +126,7 @@ function House({ house }) {
 }
 
 House.propTypes = {
-    house: PropTypes.shape({
-        address: PropTypes.string.isRequired,
-        entrances: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.number.isRequired,
-                name: PropTypes.string.isRequired,
-                flats: PropTypes.arrayOf(
-                    PropTypes.shape({
-                        number: PropTypes.number.isRequired
-                    })
-                ).isRequired
-            })
-        ).isRequired
-    }),
+    house: housePropTypes
 };
+
 export default House;

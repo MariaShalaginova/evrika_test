@@ -2,7 +2,7 @@ import css from './Modals.module.scss';
 import '../../styles/_base.scss';
 import close from '../../assets/close-icon.svg';
 import Button from '../Button/Button';
-import PropTypes from 'prop-types';
+import {addFlatModalPropTypes} from '../../propTypes';
 import { useEffect, useState } from 'react';
 
 const AddFlatModal = (
@@ -82,30 +82,13 @@ const AddFlatModal = (
                                 </li>
                             ))}
             </ul>
-            <Button onClick={handleAddButtonClick}>Добавить</Button>
+            <Button onClick={handleAddButtonClick}  disabled={selectedFlats.length === 0}>Добавить</Button>
             </div>
         
         </div>
     );
 };
 
-AddFlatModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    house: PropTypes.shape({
-        entrances: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.number.isRequired,
-                flats: PropTypes.arrayOf(
-                    PropTypes.shape({
-                        number: PropTypes.number.isRequired
-                    })
-                ).isRequired
-            })
-        ).isRequired
-    }).isRequired,
-    selectedEntrance: PropTypes.number,
-    onAddFlats: PropTypes.func.isRequired 
-};
+AddFlatModal.propTypes = addFlatModalPropTypes;
 
 export default AddFlatModal;

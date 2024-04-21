@@ -62,6 +62,9 @@
     }
     
     .cell {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         flex: 1;
         border-bottom: 1px solid black;
         font-size: 14px;
@@ -72,6 +75,10 @@
     .cell:last-child {
         border-right: none;
     }
-  
+    
+//     .cell_header {
+//         display: flex;
+//         align-items: center;
+//     }
 }
 
