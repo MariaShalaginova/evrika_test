@@ -1,13 +1,13 @@
 import css from './Modals.module.scss'; // Подключение файла стилей (замените на ваш путь)
 import '../../styles/_base.scss';
 import close from '../../assets/close-icon.svg';
-import  { useEffect, useState } from 'react';
+import  { useEffect, useImperativeHandle, forwardRef, useState } from 'react';
 import AddFlatModal from './AddFlat';
 // import { houses } from '../../mock';
 import {addEntranceModalPropTypes} from '../../propTypes';
 
-const AddEntranceModal = (
-    { isOpen, onClose, house, onAddEntrance }
+const AddEntranceModal = forwardRef ((
+    { isOpen, onClose, house, onAddEntrance }, ref
 ) => {
     
   //   const [entranceNumber, setEntranceNumber] = useState('');
@@ -21,14 +21,26 @@ useEffect(() => {
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       setSelectedEntranceIndex((prevIndex) => (prevIndex + 1) % house.entrances.length);
+      setSelectedEntrance(selectedEntranceIndex+1);
+      console.log(selectedEntranceIndex);
+      console.log(selectedEntrance)
+
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();
       setSelectedEntranceIndex((prevIndex) => (prevIndex - 1 + house.entrances.length) % house.entrances.length);
+      setSelectedEntrance(selectedEntranceIndex+1);
+       console.log(selectedEntranceIndex)
+      console.log(selectedEntrance)
     } else if (event.key === 'Enter') {
-      console.log(6);
-      if (selectedEntrance !== null) {
-        handleEntranceClick(selectedEntrance);
-      }
+      if (!selectedEntrance) {
+        setIsModalAddFlatOpen(false);
+      } else {
+        handleEntranceClick(selectedEntrance, selectedEntranceIndex);
+      } 
+    } else if (event.key === 'Escape') {
+      closeAddFlatModal();
+      setSelectedEntrance(null); // Сброс выбранного подъезда при нажатии Esc
+      setSelectedEntranceIndex(0); // Сброс индекса при нажатии Esc
     }
   };
 
@@ -37,16 +49,33 @@ useEffect(() => {
   return () => {
     window.removeEventListener('keydown', handleKeyDown);
   };
-}, [house.entrances.length]);
+}, [house.entrances.length, selectedEntrance]);
 
-  const handleEntranceClick = (entrance, index) => {
-    setSelectedEntrance(entrance);
-    setIsModalAddFlatOpen(true);
+// Функция для установки фокуса на модальное окно подъезда
+useImperativeHandle(ref, () => ({
+  focus: () => {
+      // Установка фокуса на модальное окно подъезда
+      // Например, можно установить фокус на кнопку закрытия окна
+      const closeButton = document.querySelector('.modal__name button');
+      if (closeButton) {
+          closeButton.focus();
+      }
+  }
+}));
+
+  const handleEntranceClick = (entranceId, index) => {
+    setSelectedEntrance(entranceId);
+   
     setSelectedEntranceIndex(index)
+    setIsModalAddFlatOpen(true);
+    console.log(selectedEntrance);
+    console.log(selectedEntranceIndex);
   };
-console.log(selectedEntrance)
+ // console.log(selectedEntrance)
   const closeAddFlatModal = () => {
     setIsModalAddFlatOpen(false);
+    // selectedEntrance(null);
+    // setSelectedEntranceIndex(null);
   };
   const handleAddFlats = (entranceId, selectedFlats) => {
     onAddEntrance(entranceId, selectedFlats);
@@ -75,7 +104,7 @@ console.log(selectedEntrance)
                               <li
                                   key={entrance.id}
                                   className={selectedEntranceIndex === index? css.selected : null}
-                                  onClick={() => handleEntranceClick(entrance.id,index)}
+                                  onClick={() => handleEntranceClick(entrance.id, index)}
                               >
                                   {entrance.name}
                               </li>
@@ -95,8 +124,9 @@ console.log(selectedEntrance)
       </AddFlatModal>
     </>
   );
-};
+});
 
 AddEntranceModal.propTypes = addEntranceModalPropTypes;
+AddEntranceModal.displayName = 'AddEntranceModal';
 
 export default AddEntranceModal;

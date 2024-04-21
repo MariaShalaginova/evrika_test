@@ -2,7 +2,7 @@ import Button from '../Button/Button';
 import css from './House.module.scss';
 import trash from '../../assets/trash-icon.svg';
 import add from '../../assets/add-icon.svg';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AddEntranceModal from '../Modals/AddEntrance';
 import { housePropTypes } from '../../propTypes';
 
@@ -10,6 +10,7 @@ function House({ house }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEntrances, setSelectedEntrances] = useState([]);
     const [activeHouseIndex, setActiveHouseIndex] = useState(null); 
+    const addEntranceModalRef = useRef(null);
 
     useEffect(() => {
         const handleKeyDown = (event) => {
@@ -30,7 +31,8 @@ function House({ house }) {
     }, [isModalOpen, activeHouseIndex]);
     const openModal = (index) => {
         setIsModalOpen(true);
-        setActiveHouseIndex(index)
+        setActiveHouseIndex(index);
+        addEntranceModalRef.current.focus();
     };
 
     const closeModal = () => {
@@ -122,7 +124,8 @@ function House({ house }) {
                 isOpen={isModalOpen}
                 onClose={closeModal} 
                 onAddEntrance={handleAddEntrance}
-                house={ house }>
+                house={ house }
+                ref={addEntranceModalRef}>
                     
             </AddEntranceModal>
         </>
