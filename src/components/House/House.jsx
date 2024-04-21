@@ -9,14 +9,15 @@ import { housePropTypes } from '../../propTypes';
 function House({ house }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEntrances, setSelectedEntrances] = useState([]);
+    const [activeHouseIndex, setActiveHouseIndex] = useState(null); 
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'Enter' && !isModalOpen) {
+        const handleKeyDown = (event) => {
+            if (event.key === 'Enter' && activeHouseIndex !== null) { // Проверяем, что есть активный дом
                 openModal();
-            } else if (e.key === 'Escape' && isModalOpen) {
+            } else if (event.key === 'Escape' && isModalOpen) {
                 closeModal();
-            } else if (e.key === 'Delete') {
+            } else if (event.key === 'Delete') {
                 handleDeleteEntrance();
             }
         };
@@ -26,10 +27,10 @@ function House({ house }) {
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isModalOpen]);
-
-    const openModal = () => {
+    }, [isModalOpen, activeHouseIndex]);
+    const openModal = (index) => {
         setIsModalOpen(true);
+        setActiveHouseIndex(index)
     };
 
     const closeModal = () => {
@@ -59,10 +60,13 @@ function House({ house }) {
     
         closeModal();
     };
-    const handleAddButtonClick = () => {
-        openModal();
+
+    const handleAddButtonClick = (index) => { // Принимаем индекс дома
+        openModal(index);
     };
+
     console.log(selectedEntrances)
+
     const handleDeleteEntrance = () => {
         setSelectedEntrances([]);
     };

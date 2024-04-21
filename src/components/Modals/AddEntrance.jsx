@@ -1,7 +1,7 @@
 import css from './Modals.module.scss'; // Подключение файла стилей (замените на ваш путь)
 import '../../styles/_base.scss';
 import close from '../../assets/close-icon.svg';
-import  { useState } from 'react';
+import  { useEffect, useState } from 'react';
 import AddFlatModal from './AddFlat';
 // import { houses } from '../../mock';
 import {addEntranceModalPropTypes} from '../../propTypes';
@@ -14,11 +14,37 @@ const AddEntranceModal = (
   const [selectedEntrance, setSelectedEntrance] = useState(null);
   const [isModalAddFlatOpen, setIsModalAddFlatOpen] = useState(false);//открытие модального окна с квартирами
 
-  const handleEntranceClick = (entrance) => {
-    setSelectedEntrance(entrance);
-    setIsModalAddFlatOpen(true);
+  const [selectedEntranceIndex, setSelectedEntranceIndex] = useState(0);
+
+useEffect(() => {
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      setSelectedEntranceIndex((prevIndex) => (prevIndex + 1) % house.entrances.length);
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      setSelectedEntranceIndex((prevIndex) => (prevIndex - 1 + house.entrances.length) % house.entrances.length);
+    } else if (event.key === 'Enter') {
+      console.log(6);
+      if (selectedEntrance !== null) {
+        handleEntranceClick(selectedEntrance);
+      }
+    }
   };
 
+  window.addEventListener('keydown', handleKeyDown);
+
+  return () => {
+    window.removeEventListener('keydown', handleKeyDown);
+  };
+}, [house.entrances.length]);
+
+  const handleEntranceClick = (entrance, index) => {
+    setSelectedEntrance(entrance);
+    setIsModalAddFlatOpen(true);
+    setSelectedEntranceIndex(index)
+  };
+console.log(selectedEntrance)
   const closeAddFlatModal = () => {
     setIsModalAddFlatOpen(false);
   };
@@ -45,11 +71,11 @@ const AddEntranceModal = (
           <div className={css.modal__content}>
             <ul className={css.entranceList}>
 
-              {house.entrances.map((entrance) => (
+              {house.entrances.map((entrance, index) => (
                               <li
                                   key={entrance.id}
-                                  className={selectedEntrance === entrance.id? css.selected : null}
-                                  onClick={() => handleEntranceClick(entrance.id)}
+                                  className={selectedEntranceIndex === index? css.selected : null}
+                                  onClick={() => handleEntranceClick(entrance.id,index)}
                               >
                                   {entrance.name}
                               </li>
