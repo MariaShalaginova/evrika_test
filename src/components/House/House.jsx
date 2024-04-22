@@ -142,7 +142,6 @@ function House({ house }) {
                                 <p>Номер квартиры</p>
                             </div>
                         </div>
-                        {/* <div className={css.row}> */}
 
                         {selectedEntrances.map((entrance) => (
                             <div key={Object.keys(entrance)[0]} className={css.row}>
