@@ -52,6 +52,9 @@
         @include button-no-background; 
     }
 
-
+    @media screen and (max-width: 480px) {
+       width: auto;
+       left: 20%;
+    }
    
 }
