@@ -77,10 +77,31 @@ const AddEntranceModal = forwardRef ((
     // selectedEntrance(null);
     // setSelectedEntranceIndex(null);
   };
-  const handleAddFlats = (entranceId, selectedFlats) => {
-    onAddEntrance(entranceId, selectedFlats);
+  // const handleAddFlats = (entranceId, selectedFlats) => {
+  //   onAddEntrance(entranceId, selectedFlats);
+  //   setIsModalAddFlatOpen(false);
+  // };
+  const handleAddFlats = (selectedData) => {
+    console.log(selectedData);
+    onAddEntrance(selectedData);
     setIsModalAddFlatOpen(false);
   };
+//   const handleAddFlats = (selectedData) => {
+//     const updatedHouse = {
+//         ...house,
+//         entrances: house.entrances.map(entrance => {
+//             if (entrance.id === selectedData.entranceId) {
+//                 return {
+//                     ...entrance,
+//                     flats: selectedData.flats
+//                 };
+//             }
+//             return entrance;
+//         })
+//     };
+//     onAddEntrance(updatedHouse);
+//     setIsModalAddFlatOpen(false);
+// };
 
   if (!isOpen) return null;
 

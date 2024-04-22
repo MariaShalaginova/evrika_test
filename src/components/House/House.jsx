@@ -11,7 +11,22 @@ function House({ house }) {
     const [selectedEntrances, setSelectedEntrances] = useState([]);
     const [activeHouseIndex, setActiveHouseIndex] = useState(null); 
     const addEntranceModalRef = useRef(null);
-
+   
+    useEffect(() => {
+        // Получаем идентификатор текущего дома
+        const houseId = house.id;
+        // Формируем ключ для хранения данных в локальном хранилище
+        const storageKey = `selectedEntrances_${houseId}`;
+        // Проверяем, есть ли сохраненные данные для текущего дома в локальном хранилище
+        const savedEntrances = JSON.parse(sessionStorage.getItem(storageKey));
+        if (savedEntrances) {
+            setSelectedEntrances(savedEntrances);
+            console.log(selectedEntrances);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [house, selectedEntrances]);
+   
+    console.log (sessionStorage.getItem('selectedEntrances'))
     useEffect(() => {
         const handleKeyDown = (event) => {
             if (event.key === 'Enter' && activeHouseIndex !== null) { // Проверяем, что есть активный дом
@@ -38,37 +53,65 @@ function House({ house }) {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-   
-    const handleAddEntrance = (entranceId, selectedFlats) => {
-        
-        const existingEntranceIndex = selectedEntrances.findIndex((ent) => ent.id === entranceId);
-     
-        if (existingEntranceIndex !== -1) {
-            // Если подъезд уже выбран, обновляем список его квартир
-            const updatedEntrances = [...selectedEntrances];
-            const entranceToUpdate = updatedEntrances[existingEntranceIndex];
-            // Фильтруем квартиры, чтобы исключить уже выбранные
-            const filteredFlats = selectedFlats.filter((flat) => !entranceToUpdate.flats.includes(flat));
-            const updatedFlats = [...entranceToUpdate.flats, ...filteredFlats];
-            const updatedEntrance = { ...entranceToUpdate, flats: updatedFlats };
-            updatedEntrances[existingEntranceIndex] = updatedEntrance;
-    
-            setSelectedEntrances(updatedEntrances);
+    const handleAddEntrance = (selectedData) => {
+        // Проверяем, является ли selectedData объектом
+        if (typeof selectedData === 'object' && selectedData !== null) {
+            // Преобразовать selectedData в массив объектов перед передачей в House
+            const selectedEntrancesArray = Object.keys(selectedData).map((key) => ({
+                [key]: selectedData[key]
+            }));
+
+            // Объединяем новые данные с предыдущими
+             const updatedEntrances = mergeEntrancesArrays([selectedEntrances, selectedEntrancesArray]);
+
+             setSelectedEntrances(updatedEntrances);
+             console.log(updatedEntrances)
+            
+             // При обновлении данных сохраняем их в локальное хранилище
+             sessionStorage.setItem('selectedEntrances', JSON.stringify(updatedEntrances));
+
+            // Закрываем модальное окно
+            closeModal();
         } else {
-            const entrance = house.entrances.find((ent) => ent.id === entranceId);
-            const updatedEntrance = { ...entrance, flats: selectedFlats };
-            setSelectedEntrances([...selectedEntrances, updatedEntrance]);
+            console.error('Ошибка: selectedData должен быть объектом.');
         }
-    
-        closeModal();
     };
 
+    //проверка на повторяющиеся номера квартир в подъезде
+    const mergeEntrancesArrays =(arrays) =>{
+        // Создаем пустой объект для хранения данных о квартирах в подъездах
+        const mergedEntrances = {};
+    
+        // Проходимся по каждому массиву объектов
+        arrays.forEach(array => {
+            // Проходимся по каждому объекту в массиве
+            array.forEach(obj => {
+                // Получаем ключ (номер подъезда) и значение (массив квартир)
+                const key = Object.keys(obj)[0];
+                const value = obj[key];
+    
+                // Если подъезд уже есть в объединенном объекте, добавляем квартиры к существующему массиву
+                if (Object.prototype.hasOwnProperty.call(mergedEntrances, key)) {
+                    mergedEntrances[key] = [...new Set([...mergedEntrances[key], ...value])]; // Используем Set для удаления дубликатов
+                } else {
+                    // Если подъезда еще нет, создаем новую запись
+                    mergedEntrances[key] = value;
+                }
+            });
+        });
+    
+        // Преобразуем объект обратно в массив объектов
+        const result = Object.entries(mergedEntrances).map(([key, value]) => ({ [key]: value }));
+    
+        return result;
+    }
+
+    console.log(selectedEntrances)
     const handleAddButtonClick = (index) => { // Принимаем индекс дома
         openModal(index);
     };
 
-    console.log(selectedEntrances)
-
+    // console.log(selectedEntrances)
     const handleDeleteEntrance = () => {
         setSelectedEntrances([]);
     };
@@ -102,22 +145,20 @@ function House({ house }) {
                         {/* <div className={css.row}> */}
 
                         {selectedEntrances.map((entrance) => (
-                            <div key={entrance.id} className={css.row}>
+                            <div key={Object.keys(entrance)[0]} className={css.row}>
                                 <div className={css.cell}>
-                                 Подъезд {entrance.number}
+                                    Подъезд {Object.keys(entrance)[0]}
                                 </div>
                                 <div className={css.cell}>
-                                    {entrance.flats && entrance.flats
-                                        .sort((a, b) => a - b) // Сортируем квартиры по возрастанию
-                                        .map((flat, index) => (
-                                            <span key={flat}>{flat}{index !== entrance.flats.length - 1 ? ', ' : ''}</span>
+                                    {entrance[Object.keys(entrance)[0]].sort((a, b) => a - b).map((flat, index, array) => (
+                                        <span key={flat}>{flat}{index !== array.length - 1 ? ', ' : ''}</span>
                                     ))}
                                 </div>
                             </div>
                         ))}
   
                     </div>    
-                 
+                    
                 </div>
             </div>
             <AddEntranceModal
@@ -126,7 +167,6 @@ function House({ house }) {
                 onAddEntrance={handleAddEntrance}
                 house={ house }
                 ref={addEntranceModalRef}>
-                    
             </AddEntranceModal>
         </>
     );
