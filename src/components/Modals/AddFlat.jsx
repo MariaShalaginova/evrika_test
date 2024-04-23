@@ -3,19 +3,19 @@ import '../../styles/_base.scss';
 import close from '../../assets/close-icon.svg';
 import Button from '../Button/Button';
 import {addFlatModalPropTypes} from '../../propTypes';
-import { useEffect, useState } from 'react';
+import { useEffect,  useState, forwardRef, useImperativeHandle} from 'react';
 
-const AddFlatModal = (
-    { isOpen, onClose, house, selectedEntrance, onAddFlats }
+const AddFlatModal = forwardRef((
+    // eslint-disable-next-line no-unused-vars
+    { isOpen, onClose, house, selectedEntrance, onAddFlats, flatModalRef }, ref
 ) => {
 
     const [selectedFlats, setSelectedFlats] = useState({});
     const [selectedFlatIndex, setSelectedFlatIndex] = useState(0);
- 
+    console.log(selectedFlatIndex)
     // useEffect(() => {
     //     // Проверяем, есть ли сохраненные данные для текущего дома в локальном хранилище
     //     const savedEntrances = JSON.parse(sessionStorage.getItem('selectedEntrances'));
-
     //     // Проверяем, что данные успешно получены
     //     if (savedEntrances) {
     //         setSelectedFlats(savedEntrances);
@@ -31,15 +31,23 @@ const AddFlatModal = (
         // Обновляем selectedFlats при изменении выбранного подъезда
         setSelectedFlats(prevSelectedFlats => {
             const updatedSelectedFlats = {};
-    
             // Проходим по всем выбранным подъездам и добавляем квартиры в общий список
             Object.keys(prevSelectedFlats).forEach(entranceId => {
                 updatedSelectedFlats[entranceId] = prevSelectedFlats[entranceId];
             });
-    
             return updatedSelectedFlats;
         });
     }, [selectedEntrance]);
+
+    useImperativeHandle(ref, () => ({
+        focus: () => {
+            const firstFlat = document.querySelector('div');
+            if (firstFlat) {
+                firstFlat.focus();
+            }
+            console.log(firstFlat)
+        }
+    }));
 
     const handleFlatClick = (flat) => {
         setSelectedFlats(prevSelectedFlats => {
@@ -65,7 +73,6 @@ const AddFlatModal = (
     };
 
     const getFlatClassName = (flat, selectedFlats, entranceId) => {
-        // Проверяем, что selectedFlats определен и не null
         if (!selectedFlats || !entranceId) return css.flat;
         // Проверяем, выбрана ли квартира для текущего подъезда
         const isSelected = selectedFlats[entranceId]?.includes(flat);
@@ -131,8 +138,9 @@ const AddFlatModal = (
         
         </div>
     );
-};
+});
 
 AddFlatModal.propTypes = addFlatModalPropTypes;
+AddFlatModal.displayName = 'AddFlatModal';
 
 export default AddFlatModal;

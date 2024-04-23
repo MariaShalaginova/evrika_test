@@ -21,7 +21,8 @@ export const houses = [
             { number: 1 },
             { number: 2 },
             { number: 3 },
-            { number: 4 }
+            { number: 4 },
+            { number: 5 }
           ]
         }
       ]
@@ -81,7 +82,9 @@ export const houses = [
             flats: [
               { number: 1 },
               { number: 2 },
-              { number: 3 }
+              { number: 3 },
+              { number: 4 },
+              { number: 5 }
             ]
           }
         ]
@@ -106,7 +109,8 @@ export const houses = [
             flats: [
               { number: 1 },
               { number: 2 },
-              { number: 3 }
+              { number: 3 },
+              { number: 4 },
             ]
           }
         ]

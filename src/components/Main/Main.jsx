@@ -13,7 +13,6 @@ function Main() {
         </div>
      </div>
   
-  
     );
   }
 
