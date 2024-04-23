@@ -26,12 +26,10 @@ function House({ house }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [house, selectedEntrances]);
    
-    console.log (sessionStorage.getItem('selectedEntrances'))
+    // console.log (sessionStorage.getItem('selectedEntrances'))
     useEffect(() => {
         const handleKeyDown = (event) => {
-            if (event.key === 'Enter' && activeHouseIndex !== null) { // Проверяем, что есть активный дом
-                openModal();
-            } else if (event.key === 'Escape' && isModalOpen) {
+           if (event.key === 'Escape' && isModalOpen) {
                 closeModal();
             } else if (event.key === 'Delete') {
                 handleDeleteEntrance();
@@ -81,8 +79,7 @@ function House({ house }) {
     const mergeEntrancesArrays =(arrays) =>{
         // Создаем пустой объект для хранения данных о квартирах в подъездах
         const mergedEntrances = {};
-    
-        // Проходимся по каждому массиву объектов
+
         arrays.forEach(array => {
             // Проходимся по каждому объекту в массиве
             array.forEach(obj => {
@@ -106,8 +103,8 @@ function House({ house }) {
         return result;
     }
 
-    console.log(selectedEntrances)
-    const handleAddButtonClick = (index) => { // Принимаем индекс дома
+    // console.log(selectedEntrances)
+    const handleAddButtonClick = (index) => { 
         openModal(index);
     };
 
@@ -124,10 +121,26 @@ function House({ house }) {
                     <p>{house.address}</p>
 
                     <div className={css.item__buttons}>
-                        <Button  onClick={() => handleDeleteEntrance()} className={css.item__button}>
-                            <img src={trash} alt="trash" />
+                        <Button 
+                            id="deleteButton"  
+                            onClick={() => handleDeleteEntrance()} 
+                            className={css.item__button} 
+                            onKeyDown={(event) => {
+                                    if (event.key === 'Enter' && document.activeElement.id === 'deleteButton') {
+                                        handleDeleteEntrance();
+                                    }
+                                }}>
+                                <img src={trash} alt="trash" />
                         </Button>
-                        <Button onClick={handleAddButtonClick} className={css.button}>
+                        <Button
+                            id="addButton" 
+                            onClick={handleAddButtonClick} 
+                            className={css.button}
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter' && document.activeElement.id === 'addButton') {
+                                    openModal();
+                                }
+                            }} >
                             <img src={add} alt="add" />
                         </Button>
                     </div>

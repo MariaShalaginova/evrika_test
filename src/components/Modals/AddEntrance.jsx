@@ -22,15 +22,15 @@ const AddEntranceModal = forwardRef ((
           event.preventDefault();
           setSelectedEntranceIndex((prevIndex) => (prevIndex + 1) % house.entrances.length);
           setSelectedEntrance(selectedEntranceIndex+1);
-          console.log(selectedEntranceIndex);
-          console.log(selectedEntrance)
+          // console.log(selectedEntranceIndex);
+          // console.log(selectedEntrance)
 
         } else if (event.key === 'ArrowUp') {
           event.preventDefault();
           setSelectedEntranceIndex((prevIndex) => (prevIndex - 1 + house.entrances.length) % house.entrances.length);
           setSelectedEntrance(selectedEntranceIndex+1);
-          console.log(selectedEntranceIndex)
-          console.log(selectedEntrance)
+          // console.log(selectedEntranceIndex)
+          // console.log(selectedEntrance)
         } else if (event.key === 'Enter') {
           if (!selectedEntrance) {
             setIsModalAddFlatOpen(false);
