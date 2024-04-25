@@ -10,7 +10,8 @@ function House({ house }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedEntrances, setSelectedEntrances] = useState([]);
     const [activeHouseIndex, setActiveHouseIndex] = useState(null); 
-    const addEntranceModalRef = useRef(null);
+    const houseRef=useRef();
+    const entranceRef = useRef(null);
    
     useEffect(() => {
         // Получаем идентификатор текущего дома
@@ -24,10 +25,11 @@ function House({ house }) {
             console.log(selectedEntrances);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [house, selectedEntrances]);
+    }, [house]);
    
     // console.log (sessionStorage.getItem('selectedEntrances'))
     useEffect(() => {
+        const targetNode = houseRef.current;
         const handleKeyDown = (event) => {
            if (event.key === 'Escape' && isModalOpen) {
                 closeModal();
@@ -36,16 +38,17 @@ function House({ house }) {
             }
         };
 
-        document.addEventListener('keydown', handleKeyDown);
+        targetNode && targetNode.addEventListener("keydown", handleKeyDown);
 
         return () => {
-            document.removeEventListener('keydown', handleKeyDown);
+            targetNode && targetNode.removeEventListener('keydown', handleKeyDown);
         };
     }, [isModalOpen, activeHouseIndex]);
+
     const openModal = (index) => {
         setIsModalOpen(true);
         setActiveHouseIndex(index);
-        addEntranceModalRef.current.focus();
+        entranceRef.current.focus();
     };
 
     const closeModal = () => {
@@ -63,7 +66,7 @@ function House({ house }) {
              const updatedEntrances = mergeEntrancesArrays([selectedEntrances, selectedEntrancesArray]);
 
              setSelectedEntrances(updatedEntrances);
-             console.log(updatedEntrances)
+            //  console.log(updatedEntrances)
             
              // При обновлении данных сохраняем их в локальное хранилище
              sessionStorage.setItem('selectedEntrances', JSON.stringify(updatedEntrances));
@@ -103,41 +106,38 @@ function House({ house }) {
         return result;
     }
 
-    // console.log(selectedEntrances)
     const handleAddButtonClick = (index) => { 
         openModal(index);
     };
 
-    // console.log(selectedEntrances)
     const handleDeleteEntrance = () => {
         setSelectedEntrances([]);
     };
 
     return (
         <>
-            <div className={css.item}>
+            <div className={css.item} ref={houseRef}>
 
                 <div className={css.item__name}>
                     <p>{house.address}</p>
 
                     <div className={css.item__buttons}>
-                        <Button 
-                            id="deleteButton"  
+                        <Button  
                             onClick={() => handleDeleteEntrance()} 
                             className={css.item__button} 
                             onKeyDown={(event) => {
-                                    if (event.key === 'Enter' && document.activeElement.id === 'deleteButton') {
+                                    if (event.key === 'Enter' ) {
                                         handleDeleteEntrance();
                                     }
-                                }}>
+                                }}
+                                >
                                 <img src={trash} alt="trash" />
                         </Button>
                         <Button
-                            id="addButton" 
                             onClick={handleAddButtonClick} 
                             className={css.button}
                             onKeyDown={(event) => {
-                                if (event.key === 'Enter' && document.activeElement.id === 'addButton') {
+                                if (event.key === 'Enter') {
                                     openModal();
                                 }
                             }} >
@@ -145,6 +145,7 @@ function House({ house }) {
                         </Button>
                     </div>
                 </div>
+
                 <div className={css.item__list}>
                     <div className={css.block}>
                         <div className={css.row}>
@@ -178,7 +179,8 @@ function House({ house }) {
                 onClose={closeModal} 
                 onAddEntrance={handleAddEntrance}
                 house={ house }
-                ref={addEntranceModalRef}>
+                ref={entranceRef}
+                >
             </AddEntranceModal>
         </>
     );

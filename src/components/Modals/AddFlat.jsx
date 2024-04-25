@@ -3,16 +3,17 @@ import '../../styles/_base.scss';
 import close from '../../assets/close-icon.svg';
 import Button from '../Button/Button';
 import {addFlatModalPropTypes} from '../../propTypes';
-import { useEffect,  useState, forwardRef, useImperativeHandle} from 'react';
+import { useEffect,  useState, forwardRef, useImperativeHandle, useRef} from 'react';
 
 const AddFlatModal = forwardRef((
     // eslint-disable-next-line no-unused-vars
-    { isOpen, onClose, house, selectedEntrance, onAddFlats, flatModalRef }, ref
+    { isOpen, onClose, house, selectedEntrance, onAddFlats, entranceRef,setSelectedFlatsObject }, ref
 ) => {
-
+    
     const [selectedFlats, setSelectedFlats] = useState({});
     const [selectedFlatIndex, setSelectedFlatIndex] = useState(0);
-    console.log(selectedFlatIndex)
+    const flatRef = useRef(null);
+
     // useEffect(() => {
     //     // Проверяем, есть ли сохраненные данные для текущего дома в локальном хранилище
     //     const savedEntrances = JSON.parse(sessionStorage.getItem('selectedEntrances'));
@@ -21,11 +22,15 @@ const AddFlatModal = forwardRef((
     //         setSelectedFlats(savedEntrances);
     //         console.log(savedEntrances);
     //     } else {
-    //         // Если данные не найдены или не удалось их прочитать
+    //         // Если данные не найдены 
     //         console.error('Данные не найдены в хранилище');
     //     }
     // }, [house, selectedEntrance]);
  
+    useEffect(() => {
+        setSelectedFlatsObject(selectedFlats); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedFlats]);
 
     useEffect(() => {
         // Обновляем selectedFlats при изменении выбранного подъезда
@@ -39,13 +44,60 @@ const AddFlatModal = forwardRef((
         });
     }, [selectedEntrance]);
 
+    useEffect(() => {
+        const targetNode = flatRef.current;
+        const handleKeyDown = (event) => {
+            const flats = targetNode.querySelectorAll('li');
+            const flatId = Number(event.target.dataset.flatId); 
+           
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                setSelectedFlatIndex((prevIndex) => (prevIndex + 1) % flats.length);
+                flats[selectedFlatIndex].focus();
+
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                setSelectedFlatIndex((prevIndex) => (prevIndex - 1 + flats.length) % flats.length);
+                flats[selectedFlatIndex].focus();
+
+            } else if (event.key === 'ArrowLeft') {
+                event.preventDefault();
+                console.log('vlevo')
+                focusEntranceModal();
+    
+            }    else if (event.key === 'Enter' && event.ctrlKey) {
+                event.preventDefault();
+                handleAddButtonClick()
+
+            }  else if (event.key === 'Enter') {
+                event.preventDefault();
+                console.log(flatId)
+                handleFlatClick(flatId);
+            }
+        };
+    
+        if (isOpen && targetNode) {
+            targetNode.addEventListener('keydown', handleKeyDown);
+        }
+    
+        return () => {
+            if (targetNode) {
+                targetNode.removeEventListener('keydown', handleKeyDown);
+            }
+        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpen, selectedFlats, selectedFlatIndex]);
+    
     useImperativeHandle(ref, () => ({
         focus: () => {
-            const firstFlat = document.querySelector('div');
-            if (firstFlat) {
-                firstFlat.focus();
-            }
-            console.log(firstFlat)
+            setTimeout(() => {
+                if (flatRef.current) {
+                    const focusItem = flatRef.current.querySelector('li');
+                    if (focusItem) {
+                        focusItem.focus();
+                    }
+                }
+            }, 0);
         }
     }));
 
@@ -67,11 +119,16 @@ const AddFlatModal = forwardRef((
                 // Если для текущего подъезда еще нет выбранных квартир, создаем массив и добавляем в него текущую квартиру
                 updatedSelectedFlats[selectedEntrance] = [flat];
             }
-    
             return updatedSelectedFlats;
         });
     };
 
+    const focusEntranceModal = () => {
+        if (entranceRef.current) {
+            entranceRef.current.focus();
+        }
+      };
+  
     const getFlatClassName = (flat, selectedFlats, entranceId) => {
         if (!selectedFlats || !entranceId) return css.flat;
         // Проверяем, выбрана ли квартира для текущего подъезда
@@ -80,17 +137,7 @@ const AddFlatModal = forwardRef((
         return isSelected ? `${css.flat} ${css.selected}` : css.flat;
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'ArrowDown') {
-            setSelectedFlatIndex((prevIndex) => Math.min(prevIndex + 1, selectedFlats.length - 1));
-        } else if (e.key === 'ArrowUp') {
-            setSelectedFlatIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-        } else if (e.key === 'Enter' && e.ctrlKey) {
-            // Сохранение выбранных квартир в таблицу 
-           
-        }
-    };
-
+  
     const closeAddFlatModal = () => {
         setSelectedFlats([]);
         setSelectedFlatIndex(0);
@@ -98,9 +145,9 @@ const AddFlatModal = forwardRef((
     };
 
     const handleAddButtonClick = () => {
+        setSelectedFlatsObject(selectedFlats);
         onAddFlats(selectedFlats);
-        // Закрыть модальное окно
-        onClose();
+        closeAddFlatModal(); 
     };
 
     if (!isOpen || !house) return null;
@@ -109,24 +156,24 @@ const AddFlatModal = forwardRef((
     const isAddButtonActive = Object.values(selectedFlats).flat().length > 0;
 
     return (
-        // <div className={`modal ${isOpen ? 'open' : ''}`}>
-        <div className={`${css.modal} ${css.modal__flat}`} >
-        <div className={css.modal__name}>
+
+        <div className={`${css.modal} ${css.modal__flat}`} ref={flatRef} tabIndex="0">
+            <div className={css.modal__name}>
             <p>Номер квартиры</p>
             <button onClick={closeAddFlatModal} className={css.button_no_background}>
                 <img src={close} alt="close" />
             </button>     
             </div>
 
-            <div className={css.modal__content} tabIndex="0" onKeyDown={handleKeyDown}>
-            <ul className={css.entranceList}>
+            <div className={css.modal__content} ref={ref} >
+            <ul className={css.entranceList} >
                 {selectedEntranceData &&
                     selectedEntranceData.flats.map((flat) => (
-                                    <li
+                                    <li 
                                         key={flat.number}
+                                        data-flat-id={flat.number}
                                         className={getFlatClassName(flat.number, selectedFlats, selectedEntrance)}
                                         onClick={() => handleFlatClick(flat.number)}
-                                        onKeyDown={handleKeyDown} 
                                         tabIndex="0"
                                     >
                                         Квартира {flat.number}
