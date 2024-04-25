@@ -62,7 +62,7 @@ const AddFlatModal = forwardRef((
 
             } else if (event.key === 'ArrowLeft') {
                 event.preventDefault();
-                console.log('vlevo')
+                // console.log('vlevo')
                 focusEntranceModal();
     
             }    else if (event.key === 'Enter' && event.ctrlKey) {
@@ -71,7 +71,7 @@ const AddFlatModal = forwardRef((
 
             }  else if (event.key === 'Enter') {
                 event.preventDefault();
-                console.log(flatId)
+                // console.log(flatId);
                 handleFlatClick(flatId);
             }
         };
